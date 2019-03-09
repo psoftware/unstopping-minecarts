@@ -13,8 +13,8 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
 version = '0.1'
-group = 'com.lecaldare.UnstoppingMinecarts' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'UnstoppingMinecarts'
+group = 'com.lecaldare.unstoppingminecarts' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = 'unstoppingminecarts'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -42,7 +42,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                UnstoppingMinecarts {
+                unstoppingminecarts {
                     source sourceSets.main
                 }
             }
@@ -58,7 +58,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                UnstoppingMinecarts {
+                unstoppingminecarts {
                     source sourceSets.main
                 }
             }
@@ -71,7 +71,7 @@ dependencies {
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     //minecraft 'net.minecraftforge:forge:1.13.2-25.0.37'
-    minecraft 'net.minecraftforge:forge:1.13.2-25.0.73'
+    minecraft 'net.minecraftforge:forge:1.13.2-25.0.74'
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
