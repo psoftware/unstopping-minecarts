@@ -48,7 +48,7 @@ public class EntityUnstoppableMinecart extends EntityMinecartEmpty {
         ChunkPos newChunkPos = new ChunkPos(pos);
         if(!newChunkPos.equals(oldChunkPos)) {
             UnstoppingMinecarts.LOGGER.info("Chunk changed to x=" + newChunkPos.x + " z=" + newChunkPos.z);
-            CartChunkLoader.getInstance().cartMovedOnChunk(this, newChunkPos);
+            CartChunkLoader.getInstance().cartMovedOnChunk(this, oldChunkPos, newChunkPos);
             oldChunkPos = newChunkPos;
         }
 
