@@ -5,12 +5,13 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.UUID;
 
 public class CartChunkLoader {
     static CartChunkLoader instance = new CartChunkLoader();
 
-    private HashMap<ChunkPos,Integer> cartLoadedChunks;
+    private HashMap<ChunkPos, HashSet<EntityUnstoppableMinecart>> cartLoadedChunks;
 
     private CartChunkLoader() {
         //ForgeChunkManager.requestTicket
@@ -25,37 +26,50 @@ public class CartChunkLoader {
     }
 
     private void loadChunk(World world, EntityUnstoppableMinecart cart, ChunkPos pos) {
-        Integer chunkLoadRequests = cartLoadedChunks.get(pos);
+        HashSet<EntityUnstoppableMinecart> chunkLoadRequests = cartLoadedChunks.get(pos);
 
         // if chunk is not loaded by other carts
-        // also, chunkLoadRequests == 0 should not happen
-        if(chunkLoadRequests == null || chunkLoadRequests == 0) {
-            ForgeChunkLoader.forceLoadChunk(cart.world, pos.x, pos.z, true);
-            cartLoadedChunks.put(pos, 1);
-        } else
-            cartLoadedChunks.put(pos, chunkLoadRequests+1);
+        // also, chunkLoadRequests.isEmpty() should not happen
+        if(chunkLoadRequests == null || chunkLoadRequests.isEmpty()) {
+            ForgeChunkLoader.forceLoadChunk(world, pos.x, pos.z, true);
+            chunkLoadRequests = new HashSet<>();
+            chunkLoadRequests.add(cart);
+            cartLoadedChunks.put(pos, chunkLoadRequests);
+        }
+        // otherwise just add the cart to the list of the cart loading requests
+        else {
+            if(!chunkLoadRequests.add(cart))
+                UnstoppingMinecarts.LOGGER.info("loadChunk: cart already requested to load this chunk");
+        }
     }
 
     private void unloadChunk(World world, EntityUnstoppableMinecart cart, ChunkPos pos) {
-        Integer chunkLoadRequests = cartLoadedChunks.get(pos);
+        HashSet<EntityUnstoppableMinecart> chunkLoadRequests = cartLoadedChunks.get(pos);
 
         // if hashmap does not contain requested chunk (absurd)
-        // also, chunkLoadRequests == 0 should not happen
-        if(chunkLoadRequests == null || chunkLoadRequests == 0) {
+        // also, chunkLoadRequests.isEmpty() should not happen
+        if(chunkLoadRequests == null || chunkLoadRequests.isEmpty()) {
             UnstoppingMinecarts.LOGGER.error("unloadChunk: chunk is not loaded");
             return;
         }
 
+        // check if this cart has previously loaded the requested chunk
+        if(!chunkLoadRequests.contains(cart)) {
+            UnstoppingMinecarts.LOGGER.error("unloadChunk: cart " + cart.getUniqueID() +
+                    " has not previously requested to load this chunk");
+            return;
+        }
+
         // if there is no other cart which requested this chunk to load
-        if(chunkLoadRequests == 1) {
+        if(chunkLoadRequests.size() == 1) {
             // unload chunk
-            ForgeChunkLoader.forceLoadChunk(cart.world, pos.x, pos.z, false);
+            ForgeChunkLoader.forceLoadChunk(world, pos.x, pos.z, false);
             // remove to reduce hashmap size
             cartLoadedChunks.remove(pos);
         }
-        // otherwise just decrement
+        // otherwise just remove the cart from the list
         else
-            cartLoadedChunks.put(pos, chunkLoadRequests-1);
+            chunkLoadRequests.remove(cart);
     }
 
     /*void cartCreated(EntityUnstoppableMinecart cart, ChunkPos pos) {
