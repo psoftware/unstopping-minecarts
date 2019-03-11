@@ -1,5 +1,8 @@
 package com.lecaldare.unstoppingminecarts;
 
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.item.Item;
@@ -8,6 +11,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
 import org.apache.logging.log4j.LogManager;
@@ -19,6 +24,8 @@ public class UnstoppingMinecarts {
     public static final String VERSION = "0.1";
 
     public static final Logger LOGGER = LogManager.getLogger(MODID);
+
+    public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
 
     private ForgeEventHandler eventHandler;
 
@@ -45,6 +52,7 @@ public class UnstoppingMinecarts {
                             .build("unstoppingminecarts.unstoppableminecart").setRegistryName("unstoppableminecart");
 
             event.getRegistry().register(unstoppableMinecart);
+            proxy.onRegisterEntities();
         }
 
         @SubscribeEvent

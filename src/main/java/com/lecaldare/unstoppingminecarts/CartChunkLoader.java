@@ -11,6 +11,7 @@ import java.util.UUID;
 public class CartChunkLoader {
     static CartChunkLoader instance = new CartChunkLoader();
 
+    // TODO: take dimension also into account
     private HashMap<ChunkPos, HashSet<EntityUnstoppableMinecart>> cartLoadedChunks;
 
     private CartChunkLoader() {
@@ -18,6 +19,7 @@ public class CartChunkLoader {
         //new ForcedChunksSaveData("ads").func_212438_a();
         //Minecraft.getInstance().world.
 
+        // TODO: load forced chunks from NBT
         cartLoadedChunks = new HashMap<>();
     }
 
