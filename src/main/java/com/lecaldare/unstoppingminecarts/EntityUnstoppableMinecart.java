@@ -19,6 +19,7 @@ public class EntityUnstoppableMinecart extends EntityMinecartEmpty {
         super(world, x, y, z);
         oldChunkPos = new ChunkPos(new BlockPos(x,y,z));
         UnstoppingMinecarts.LOGGER.info("Created new EntityUnstoppableMinecart!");
+        CartChunkLoader.getInstance().cartCreated(this, oldChunkPos);
     }
 
     /*public static EntityMinecart func_184263_a(World world, double q, double r, double s, EntityMinecart.Type minecartType) {
@@ -56,6 +57,13 @@ public class EntityUnstoppableMinecart extends EntityMinecartEmpty {
         int chunkY = pos.getY() >> 4;
         int chunkZ = pos.getZ() >> 4;*/
         //System.out.println("Moving ON RAIL to x=" + pos.getX() + " y=" + pos.getY() + " z=" + pos.getZ());
+    }
+
+    @Override
+    public void onRemovedFromWorld() {
+        UnstoppingMinecarts.LOGGER.info("Minecart removed from world");
+        CartChunkLoader.getInstance().cartDestroyed(this, oldChunkPos);
+        super.onRemovedFromWorld();
     }
 
     /*

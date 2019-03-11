@@ -72,30 +72,20 @@ public class CartChunkLoader {
             chunkLoadRequests.remove(cart);
     }
 
-    /*void cartCreated(EntityUnstoppableMinecart cart, ChunkPos pos) {
+    //TODO: Deletion could be based on hashsets for handling errors
+    void cartCreated(EntityUnstoppableMinecart cart, ChunkPos pos) {
         // Load all chunks 3x3
-        cart.getUniqueID()
-        ForgeChunkLoader.forceLoadChunk(cart.world, pos.x+1, pos.z, true);
-        ForgeChunkLoader.forceLoadChunk(cart.world, pos.x, pos.z+1, true);
-        ForgeChunkLoader.forceLoadChunk(cart.world, pos.x+1, pos.z+1, true);
-        ForgeChunkLoader.forceLoadChunk(cart.world, pos.x-1, pos.z, true);
-        ForgeChunkLoader.forceLoadChunk(cart.world, pos.x, pos.z-1, true);
-        ForgeChunkLoader.forceLoadChunk(cart.world, pos.x-1, pos.z-1, true);
-        ForgeChunkLoader.forceLoadChunk(cart.world, pos.x-1, pos.z+1, true);
-        ForgeChunkLoader.forceLoadChunk(cart.world, pos.x+1, pos.z-1, true);
+        for(int i=-1; i<=1; i++)
+            for(int j=-1; j<=1; j++)
+                loadChunk(cart.world, cart, new ChunkPos(pos.x+i, pos.z+j));
     }
 
     void cartDestroyed(EntityUnstoppableMinecart cart, ChunkPos pos) {
         // Destroy all chunks 3x3
-        ForgeChunkLoader.forceLoadChunk(cart.world, pos.x+1, pos.z, false);
-        ForgeChunkLoader.forceLoadChunk(cart.world, pos.x, pos.z+1, false);
-        ForgeChunkLoader.forceLoadChunk(cart.world, pos.x+1, pos.z+1, false);
-        ForgeChunkLoader.forceLoadChunk(cart.world, pos.x-1, pos.z, false);
-        ForgeChunkLoader.forceLoadChunk(cart.world, pos.x, pos.z-1, false);
-        ForgeChunkLoader.forceLoadChunk(cart.world, pos.x-1, pos.z-1, false);
-        ForgeChunkLoader.forceLoadChunk(cart.world, pos.x-1, pos.z+1, false);
-        ForgeChunkLoader.forceLoadChunk(cart.world, pos.x+1, pos.z-1, false);
-    }*/
+        for(int i=-1; i<=1; i++)
+            for(int j=-1; j<=1; j++)
+                unloadChunk(cart.world, cart, new ChunkPos(pos.x+i, pos.z+j));
+    }
 
     void cartMovedOnChunk(EntityUnstoppableMinecart cart, ChunkPos oldPos, ChunkPos newPos) {
         UnstoppingMinecarts.LOGGER.info("cartMovedOnChunk from " + oldPos.toString() + " to " + newPos.toString());
