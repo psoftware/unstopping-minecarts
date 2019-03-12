@@ -41,7 +41,7 @@ public class CartChunkLoader {
         // otherwise just add the cart to the list of the cart loading requests
         else {
             if(!chunkLoadRequests.add(cart))
-                UnstoppingMinecarts.LOGGER.info("loadChunk: cart already requested to load this chunk");
+                UnstoppingMinecarts.LOGGER.info("loadChunk: cart already requested to load chunk " + pos.toString());
         }
     }
 
@@ -51,14 +51,14 @@ public class CartChunkLoader {
         // if hashmap does not contain requested chunk (absurd)
         // also, chunkLoadRequests.isEmpty() should not happen
         if(chunkLoadRequests == null || chunkLoadRequests.isEmpty()) {
-            UnstoppingMinecarts.LOGGER.error("unloadChunk: chunk is not loaded");
+            UnstoppingMinecarts.LOGGER.error("unloadChunk: chunk " + pos.toString() +" is not loaded");
             return;
         }
 
         // check if this cart has previously loaded the requested chunk
         if(!chunkLoadRequests.contains(cart)) {
             UnstoppingMinecarts.LOGGER.error("unloadChunk: cart " + cart.getUniqueID() +
-                    " has not previously requested to load this chunk");
+                    " has not previously requested to load chunk " + pos.toString());
             return;
         }
 
