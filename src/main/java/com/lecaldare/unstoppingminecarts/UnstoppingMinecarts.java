@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemMinecart;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -49,7 +50,8 @@ public class UnstoppingMinecarts {
             LOGGER.info("Registering Entities...");
             EntityType<?> unstoppableMinecart =
                     EntityType.Builder.create(EntityUnstoppableMinecart.class, EntityUnstoppableMinecart::new)
-                            .build("unstoppingminecarts.unstoppableminecart").setRegistryName("unstoppableminecart");
+                            .build(MODID + ":" + "unstoppableminecart")
+                            .setRegistryName(new ResourceLocation(MODID, "unstoppableminecart"));
 
             event.getRegistry().register(unstoppableMinecart);
             proxy.onRegisterEntities();
