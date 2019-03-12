@@ -7,7 +7,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 public class ClientProxy implements IProxy {
     @Override
-    public void onRegisterEntities() {
+    public void commonSetup() {
         RenderingRegistry.registerEntityRenderingHandler(EntityUnstoppableMinecart.class, RenderUnstoppableMinecart::new);
     }
 }

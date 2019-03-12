@@ -11,12 +11,11 @@ public class RenderUnstoppableMinecart<T extends EntityUnstoppableMinecart> exte
 
     public RenderUnstoppableMinecart(RenderManager renderManagerIn) {
         super(renderManagerIn);
-        UnstoppingMinecarts.LOGGER.info("Rendering: " + UNSTOPPABLEMINECART_TEXTURES.getPath());
+        //UnstoppingMinecarts.LOGGER.info("Rendering: " + UNSTOPPABLEMINECART_TEXTURES.getPath());
     }
 
     @Override
     protected ResourceLocation getEntityTexture(T entity) {
-        UnstoppingMinecarts.LOGGER.info("1RENDERINGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
         return UNSTOPPABLEMINECART_TEXTURES;
     }
 }

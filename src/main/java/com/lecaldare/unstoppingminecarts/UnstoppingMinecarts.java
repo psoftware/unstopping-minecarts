@@ -26,6 +26,11 @@ public class UnstoppingMinecarts {
 
     public static final Logger LOGGER = LogManager.getLogger(MODID);
 
+    public static final EntityType<?> UNSTOPPABLEMINECART_TYPE =
+            EntityType.Builder.create(EntityUnstoppableMinecart.class, EntityUnstoppableMinecart::new)
+            .build(UnstoppingMinecarts.MODID + ":" + "unstoppableminecart")
+            .setRegistryName(new ResourceLocation(UnstoppingMinecarts.MODID, "unstoppableminecart"));
+
     public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
 
     private ForgeEventHandler eventHandler;
@@ -48,16 +53,12 @@ public class UnstoppingMinecarts {
         @SubscribeEvent
         public static void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
             LOGGER.info("Registering Entities...");
-            EntityType<?> unstoppableMinecart =
-                    EntityType.Builder.create(EntityUnstoppableMinecart.class, EntityUnstoppableMinecart::new)
-                            .build(MODID + ":" + "unstoppableminecart")
-                            .setRegistryName(new ResourceLocation(MODID, "unstoppableminecart"));
 
-            event.getRegistry().register(unstoppableMinecart);
-            proxy.onRegisterEntities();
+            event.getRegistry().register(UNSTOPPABLEMINECART_TYPE);
+            proxy.commonSetup();
         }
 
-        @SubscribeEvent
+        /*@SubscribeEvent
         public static void playerInteraction(PlayerInteractEvent event) {
             // Do only at server side
             if(!event.getWorld().isRemote)
@@ -70,12 +71,11 @@ public class UnstoppingMinecarts {
             // Check if it's a Minecart
             if(event.getItemStack().getItem() instanceof ItemMinecart)
                 LOGGER.info("It's a minecart!");
-        }
+        }*/
 
         @SubscribeEvent //PreInit
-        public void initClient(FMLClientSetupEvent event)
-        {
-            LOGGER.info("Executing initClient...");
+        public static void commonSetup(FMLCommonSetupEvent event) {
+            proxy.commonSetup();
         }
     }
 }

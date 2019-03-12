@@ -27,6 +27,12 @@ public class CartChunkLoader {
         return instance;
     }
 
+    private boolean isNearChunk(ChunkPos oldPos, ChunkPos newPos) {
+        int xdiff = Math.abs(oldPos.x-newPos.x);
+        int zdiff = Math.abs(oldPos.z-newPos.z);
+        return (xdiff == 1 && zdiff == 0) || (xdiff == 0 && zdiff == 1);
+    }
+
     private void loadChunk(World world, EntityUnstoppableMinecart cart, ChunkPos pos) {
         HashSet<EntityUnstoppableMinecart> chunkLoadRequests = cartLoadedChunks.get(pos);
 
@@ -91,8 +97,14 @@ public class CartChunkLoader {
 
     void cartMovedOnChunk(EntityUnstoppableMinecart cart, ChunkPos oldPos, ChunkPos newPos) {
         UnstoppingMinecarts.LOGGER.info("cartMovedOnChunk from " + oldPos.toString() + " to " + newPos.toString());
-        if(oldPos.x != newPos.x && oldPos.z != newPos.z)
-            UnstoppingMinecarts.LOGGER.info("Minecart moved diagonally or teleported? This should not happen");
+        // Check if cart moved from a chunk to a near one (not diagonally)
+        // This is an optimization.
+        if(!isNearChunk(oldPos, newPos)) {
+            UnstoppingMinecarts.LOGGER.info("Minecart moved diagonally or teleported");
+            // remove old position chunks and load the ones at the new position
+            cartDestroyed(cart, oldPos);
+            cartCreated(cart, newPos);
+        }
         else if(oldPos.x != newPos.x) {
             if(oldPos.x < newPos.x) {   // Direction: >
                 // Unload past chunks
